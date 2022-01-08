@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group 'io.github.westonal'
+version '1.0-SNAPSHOT'
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'com.android.tools.lint:lint-api:27.0.2'
+    compileOnly 'com.android.tools.lint:lint-checks:27.0.2'
+
+    testImplementation 'com.android.tools.lint:lint-tests:27.0.2'
+    testImplementation 'junit:junit:4.13.2'
+}
+
+jar {
+    manifest {
+        attributes('Lint-Registry-v2': 'io.github.westonal.lint.Registry')
+    }
+}
