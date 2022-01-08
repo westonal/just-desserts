@@ -23,11 +23,11 @@ public final class VersionCodeDetectorTest {
                 )
                 .issues(VersionCodeDetector.VERSION_CODE_USAGE)
                 .run()
-                .expect("src/foo/Example.java:5: Warning: Using 'VERSION_CODES' reference instead of the numeric value 21 [VersionCodeUsage]\n" +
+                .expect("src/foo/Example.java:5: Warning: Using 'VERSION_CODES' reference instead of the numeric value, 21 [VersionCodeUsage]\n" +
                         "    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {\n" +
                         "                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" +
                         "0 errors, 1 warnings")
-                .expectFixDiffs("Fix for src/foo/Example.java line 5: Replace with 21:\n" +
+                .expectFixDiffs("Fix for src/foo/Example.java line 5: Inline Build.VERSION_CODES.LOLLIPOP = 21:\n" +
                         "@@ -5 +5\n" +
                         "-     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {\n" +
                         "+     if (Build.VERSION.SDK_INT >= 21) {");
@@ -85,11 +85,11 @@ public final class VersionCodeDetectorTest {
                 )
                 .issues(VersionCodeDetector.VERSION_CODE_USAGE)
                 .run()
-                .expect("src/foo/Example.java:5: Warning: Using 'VERSION_CODES' reference instead of the numeric value 24 [VersionCodeUsage]\n" +
+                .expect("src/foo/Example.java:5: Warning: Using 'VERSION_CODES' reference instead of the numeric value, 24 [VersionCodeUsage]\n" +
                         "  @TargetApi(VERSION_CODES.N)\n" +
                         "             ~~~~~~~~~~~~~~~\n" +
                         "0 errors, 1 warnings")
-                .expectFixDiffs("Fix for src/foo/Example.java line 5: Replace with 24:\n" +
+                .expectFixDiffs("Fix for src/foo/Example.java line 5: Inline VERSION_CODES.N = 24:\n" +
                         "@@ -5 +5\n" +
                         "-   @TargetApi(VERSION_CODES.N)\n" +
                         "+   @TargetApi(24)");
@@ -110,11 +110,11 @@ public final class VersionCodeDetectorTest {
                 )
                 .issues(VersionCodeDetector.VERSION_CODE_USAGE)
                 .run()
-                .expect("src/foo/Example.java:5: Warning: Using 'VERSION_CODES' reference instead of the numeric value 23 [VersionCodeUsage]\n" +
+                .expect("src/foo/Example.java:5: Warning: Using 'VERSION_CODES' reference instead of the numeric value, 23 [VersionCodeUsage]\n" +
                         "  @RequiresApi(app = Build.VERSION_CODES.M)\n" +
                         "                     ~~~~~~~~~~~~~~~~~~~~~\n" +
                         "0 errors, 1 warnings")
-                .expectFixDiffs("Fix for src/foo/Example.java line 5: Replace with 23:\n" +
+                .expectFixDiffs("Fix for src/foo/Example.java line 5: Inline Build.VERSION_CODES.M = 23:\n" +
                         "@@ -5 +5\n" +
                         "-   @RequiresApi(app = Build.VERSION_CODES.M)\n" +
                         "+   @RequiresApi(app = 23)");

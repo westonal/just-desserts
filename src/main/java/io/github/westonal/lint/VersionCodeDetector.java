@@ -39,7 +39,7 @@ public final class VersionCodeDetector extends Detector implements Detector.Uast
         private final JavaEvaluator evaluator;
         private final PsiClass versionCodeClass;
 
-        public ExpressionChecker(JavaContext context) {
+        public ExpressionChecker(@NotNull JavaContext context) {
             this.context = context;
             this.evaluator = context.getEvaluator();
             this.versionCodeClass = evaluator.findClass("android.os.Build.VERSION_CODES");
@@ -58,18 +58,22 @@ public final class VersionCodeDetector extends Detector implements Detector.Uast
                 if (resolved != null && resolved.getParent().equals(versionCodeClass)) {
                     Object evaluated = node.evaluate();
 
-                    if (evaluated != null) {
-                        context.report(VERSION_CODE_USAGE, node, context.getLocation(node), "Using 'VERSION_CODES' reference instead of the numeric value " + evaluated, quickFixIssueInlineValue(evaluated.toString()));
-                    } else {
-                        context.report(VERSION_CODE_USAGE, node, context.getLocation(node), "Using 'VERSION_CODES' reference instead of the numeric value", null);
-                    }
+                    context.report(
+                            VERSION_CODE_USAGE,
+                            node,
+                            context.getLocation(node),
+                            "Using 'VERSION_CODES' reference instead of the numeric value" +
+                                    ((evaluated != null) ? ", " + evaluated : ""),
+                            evaluated != null ? quickFixIssueInlineValue(evaluated.toString(), node.toString()) : null);
                 }
             }
         }
     }
 
-    private LintFix quickFixIssueInlineValue(@NotNull String fixSource) {
+    private LintFix quickFixIssueInlineValue(@NotNull String fixSource, @NotNull String original) {
         return fix()
+                .name("Inline " + original + " = " + fixSource)
+                .family("Inline version codes")
                 .replace()
                 .all()
                 .reformat(true)
