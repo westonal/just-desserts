@@ -1,4 +1,4 @@
-rootProject.name = 'just-desserts'
+rootProject.name = 'no-desserts'
 
 include ':app'
 include ':lintchecks'

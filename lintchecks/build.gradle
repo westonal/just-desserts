@@ -2,6 +2,7 @@ apply plugin: 'java-library'
 apply plugin: 'kotlin'
 apply plugin: 'com.android.lint'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
 
 lintOptions {
     htmlReport true
@@ -27,16 +28,75 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 group 'io.github.westonal'
-version '0.1-SNAPSHOT'
+version '0.1'
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        mavenJava(MavenPublication) {
             groupId = group
             artifactId = 'no-desserts'
             version = version
 
             from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'No Desserts Linter'
+                description = 'Enforces zero usages of VERSION_CODE constants'
+                url = 'https://github.com/westonal/no-desserts'
+                licenses {
+                    license {
+                        name = 'GNU General Public License v3'
+                        url = 'https://www.gnu.org/licenses/gpl-3.0.html'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'westonal'
+                        name = 'Alan Evans'
+                        email = 'thealanevans@gmail.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/westonal/no-desserts.git'
+                    developerConnection = 'scm:git:ssh://github.com/westonal/no-desserts.git'
+                    url = 'https://github.com/westonal/no-desserts'
+                }
+            }
         }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/releases/'
+            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                // defined in the global local gradle.properties
+                username = ossrhUsername
+                password = ossrhPassword
+            }
+        }
+    }
+}
+
+// TODO: Signing, seems optional for MavenCentral though
+//signing {
+//    sign publishing.publications.mavenJava
+//}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
     }
 }
