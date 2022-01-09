@@ -1,7 +1,7 @@
 No dessert - linter
 ===
 
-[![](https://jitpack.io/v/westonal/no-dessert.svg)](https://jitpack.io/#westonal/no-dessert)
+[![](https://jitpack.io/v/westonal/no-desserts.svg)](https://jitpack.io/#westonal/no-desserts)
 
 This is a linter that enforces zero usages of Android's marketing names for their versions (desserts
 until recent years).
@@ -23,7 +23,7 @@ allprojects {
 }
 
 dependencies {
-    lintChecks 'com.github.westonal:no-dessert:{version}'
+    lintChecks 'com.github.westonal:no-desserts:0.1'
 }
 ```
 
