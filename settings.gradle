@@ -1,2 +1,4 @@
 rootProject.name = 'just-desserts'
 
+include ':app'
+include ':lintchecks'
