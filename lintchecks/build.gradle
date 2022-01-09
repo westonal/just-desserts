@@ -33,7 +33,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             groupId = group
-            artifactId = 'just-desserts'
+            artifactId = 'no-desserts'
             version = version
 
             from components.java

@@ -25,10 +25,5 @@ android {
 }
 
 dependencies {
-
-    //just for jitpack's info
-    implementation project(':lintchecks')
-
     lintChecks project(':lintchecks')
 }
-
