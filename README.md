@@ -1,16 +1,37 @@
-Just (no) Desserts
+No dessert - linter
 ===
 
-[![](https://jitpack.io/v/westonal/just-desserts.svg)](https://jitpack.io/#westonal/just-desserts)
+[![](https://jitpack.io/v/westonal/no-dessert.svg)](https://jitpack.io/#westonal/no-dessert)
 
-This is a linter that enforces zero usages of Android's marketing names for their versions (desserts till recent years).
+This is a linter that enforces zero usages of Android's marketing names for their versions (desserts
+until recent years).
 
-This is quite simply due to the fact the API documentation uses numbers, and the marketing terms are thrown in by the
-IDE as it auto fixes warnings about SDK versions.
+This is simply due to the fact the API documentation uses numbers, and the marketing terms are added
+in by the IDE as it auto fixes warnings about SDK versions.
 
-This also has a lint quick fix that puts the correct number in for you.
+It includes a lint quick fix that will inline the integer constant for you.
 
-This came from the Signal Android source https://github.com/signalapp/Signal-Android
+Usage
+===
+
+```gradle
+allprojects {
+    repositories {
+        ...
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+dependencies {
+    lintChecks 'com.github.westonal:no-dessert:{version}'
+}
+```
+
+Important, note `lintChecks`, not anything else.
+
+If you don't any expected warnings straight away, in AS, go to File -> "Sync Project with Gradle Files".
+
+This originally came from the Signal Android source https://github.com/signalapp/Signal-Android
 
 This documentation is very useful if you are attempting something like this yourself:
 http://googlesamples.github.io/android-custom-lint-rules/api-guide.html
