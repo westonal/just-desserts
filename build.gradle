@@ -1,5 +1,30 @@
+buildscript {
+    ext {
+        kotlinVersion = '1.5.30'
+        // Current lint target: 7.0.2
+        gradlePluginVersion = '7.0.2'
+        lintVersion = '30.0.2'
+
+        // Upcoming lint target: Bumble Bee / AGP 7.1
+        gradlePluginVersion = '7.1.0-alpha12'
+        lintVersion = '30.1.0-alpha12'
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$gradlePluginVersion"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    }
+}
+
 plugins {
-    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
+    id 'java-library'
+    //id 'com.android.lint'
+    id 'maven-publish'
 }
 
 group 'io.github.westonal'
@@ -11,15 +36,27 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.android.tools.lint:lint-api:27.0.2'
-    compileOnly 'com.android.tools.lint:lint-checks:27.0.2'
+    compileOnly 'com.android.tools.lint:lint-api:30+'
+    compileOnly 'com.android.tools.lint:lint-checks:30+'
 
-    testImplementation 'com.android.tools.lint:lint-tests:27.0.2'
+    testImplementation 'com.android.tools.lint:lint-tests:30+'
     testImplementation 'junit:junit:4.13.2'
 }
 
 jar {
     manifest {
         attributes('Lint-Registry-v2': 'io.github.westonal.lint.Registry')
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = group
+            artifactId = 'just-desserts'
+            version = '0.1'
+
+            from components.java
+        }
     }
 }
