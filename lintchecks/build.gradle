@@ -13,26 +13,25 @@ lintOptions {
 }
 
 dependencies {
-    // For a description of the below dependencies, see the main project README
     compileOnly "com.android.tools.lint:lint-api:$lintVersion"
-    // You typically don't need this one:
     compileOnly "com.android.tools.lint:lint-checks:$lintVersion"
-    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 
     testImplementation "junit:junit:4.13.2"
     testImplementation "com.android.tools.lint:lint:$lintVersion"
     testImplementation "com.android.tools.lint:lint-tests:$lintVersion"
 }
 
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
-
 group 'io.github.westonal'
-version '0.1'
+version '0.14'
 
 java {
     withJavadocJar()
     withSourcesJar()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 publishing {
@@ -78,9 +77,18 @@ publishing {
     }
     repositories {
         maven {
-            def releasesRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/releases/'
+            def stagingRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
             def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
-            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            def staging = !version.endsWith('SNAPSHOT')
+            url = staging ? stagingRepoUrl : snapshotsRepoUrl
+            tasks.create('displayPublishLocation') {
+                doLast {
+                    println("Publishing $version to${staging ? " staging" : ""} $url")
+                    if (staging) {
+                        println("You will need to promote to a release at https://s01.oss.sonatype.org/#stagingRepositories")
+                    }
+                }
+            }
             credentials {
                 // defined in the global local gradle.properties
                 username = ossrhUsername
@@ -90,13 +98,17 @@ publishing {
     }
 }
 
-// TODO: Signing, seems optional for MavenCentral though
-//signing {
-//    sign publishing.publications.mavenJava
-//}
+afterEvaluate {
+  publish.dependsOn(displayPublishLocation)
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
 
 javadoc {
-    if(JavaVersion.current().isJava9Compatible()) {
+    if (JavaVersion.current().isJava9Compatible()) {
         options.addBooleanOption('html5', true)
     }
 }
+

@@ -1,7 +1,13 @@
 No dessert - linter
 ===
 
-[![](https://jitpack.io/v/westonal/no-desserts.svg)](https://jitpack.io/#westonal/no-desserts)
+On Maven Central:
+
+![Maven Central](https://img.shields.io/maven-central/v/io.github.westonal/no-desserts)
+
+Or Jitpack:
+
+[![Jitpack](https://jitpack.io/v/westonal/no-desserts.svg)](https://jitpack.io/#westonal/no-desserts)
 
 This is a linter that enforces zero usages of Android's marketing names for their versions (desserts
 until recent years).
@@ -14,6 +20,22 @@ It includes a lint quick fix that will inline the integer constant for you.
 Usage
 ===
 
+MavenCentral:
+
+```gradle
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+dependencies {
+    lintChecks 'com.github.westonal:no-desserts:0.14'
+}
+```
+
+Or Jitpack:
+
 ```gradle
 allprojects {
     repositories {
@@ -23,7 +45,7 @@ allprojects {
 }
 
 dependencies {
-    lintChecks 'com.github.westonal:no-desserts:0.1'
+    lintChecks 'com.github.westonal:no-desserts:0.14'
 }
 ```
 
