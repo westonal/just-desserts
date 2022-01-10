@@ -34,6 +34,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+def hasMavenCentralCredentials = hasProperty('ossrhUsername')
+def hasSigningDetails = hasProperty('signing.keyId')
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -75,35 +78,41 @@ publishing {
             }
         }
     }
-    repositories {
-        maven {
-            def stagingRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
-            def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
-            def staging = !version.endsWith('SNAPSHOT')
-            url = staging ? stagingRepoUrl : snapshotsRepoUrl
-            tasks.create('displayPublishLocation') {
-                doLast {
-                    println("Publishing $version to${staging ? " staging" : ""} $url")
-                    if (staging) {
-                        println("You will need to promote to a release at https://s01.oss.sonatype.org/#stagingRepositories")
+    if (hasMavenCentralCredentials) {
+        repositories {
+            maven {
+                def stagingRepoUrl = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+                def snapshotsRepoUrl = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+                def staging = !version.endsWith('SNAPSHOT')
+                url = staging ? stagingRepoUrl : snapshotsRepoUrl
+                tasks.create('displayPublishLocation') {
+                    doLast {
+                        println("Publishing $version to${staging ? " staging" : ""} $url")
+                        if (staging) {
+                            println("You will need to promote to a release at https://s01.oss.sonatype.org/#stagingRepositories")
+                        }
                     }
                 }
-            }
-            credentials {
-                // defined in the global local gradle.properties
-                username = ossrhUsername
-                password = ossrhPassword
+                credentials {
+                    // defined in the global local gradle.properties
+                    username = ossrhUsername
+                    password = ossrhPassword
+                }
             }
         }
     }
 }
 
 afterEvaluate {
-  publish.dependsOn(displayPublishLocation)
+    if (hasMavenCentralCredentials) {
+        publish.dependsOn(displayPublishLocation)
+    }
 }
 
-signing {
-    sign publishing.publications.mavenJava
+if (hasSigningDetails) {
+    signing {
+        sign publishing.publications.mavenJava
+    }
 }
 
 javadoc {
