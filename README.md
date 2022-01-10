@@ -30,7 +30,7 @@ allprojects {
 }
 
 dependencies {
-    lintChecks 'com.github.westonal:no-desserts:0.14'
+    lintChecks 'io.github.westonal:no-desserts:0.14'
 }
 ```
 
